@@ -7,7 +7,15 @@ import {
   UPDATE_LOG,
   SET_CURRENT,
   CLEAR_CURRENT,
+  SEARCH_LOGS,
 } from "./types";
+
+// Set loading to true
+export const setLoading = () => {
+  return {
+    type: SET_LOADING,
+  };
+};
 
 // export const getLogs = () => {
 //   return async (dispatch) => {
@@ -49,14 +57,16 @@ export const deleteLog = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: LOGS_ERROR,
-      payload: error.response.data,
+      payload: error.response.statusText,
     });
   }
 };
 
 export const addLog = (log) => async (dispatch) => {
   try {
-    setLoading();
+    dispatch({
+      type: SET_LOADING,
+    });
 
     const config = {
       method: "post",
@@ -76,7 +86,7 @@ export const addLog = (log) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: LOGS_ERROR,
-      payload: error.response.data,
+      payload: error.response.statusText,
     });
   }
 };
@@ -104,7 +114,7 @@ export const updateLog = (log) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: LOGS_ERROR,
-      payload: error.response.data,
+      payload: error.response.statusText,
     });
   }
 };
@@ -123,14 +133,29 @@ export const getLogs = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: LOGS_ERROR,
-      payload: error.response.data,
+      payload: error.response.statusText,
     });
   }
 };
 
-// Set loading to true
-export const setLoading = () => {
-  return {
-    type: SET_LOADING,
-  };
+// Search server logs
+export const searchLogs = (text) => async (dispatch) => {
+  try {
+    dispatch({
+      type: SET_LOADING,
+    });
+
+    const res = await fetch(`/logs?q=${text}`);
+    const data = await res.json();
+
+    dispatch({
+      type: SEARCH_LOGS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: LOGS_ERROR,
+      payload: error.response.statusText,
+    });
+  }
 };

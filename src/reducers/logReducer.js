@@ -7,6 +7,7 @@ import {
   UPDATE_LOG,
   CLEAR_CURRENT,
   SET_CURRENT,
+  SEARCH_LOGS,
 } from "../actions/types";
 
 const initialState = {
@@ -15,8 +16,15 @@ const initialState = {
   loading: false,
   error: null,
 };
+
 const logReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SEARCH_LOGS:
+      return {
+        ...state,
+        logs: action.payload,
+        loading: false,
+      };
     case SET_CURRENT:
       return {
         ...state,
@@ -60,6 +68,7 @@ const logReducer = (state = initialState, action) => {
         error: action.payload,
       };
     case SET_LOADING:
+      console.log("loading");
       return {
         ...state,
         loading: true,
